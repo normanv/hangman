@@ -43,9 +43,13 @@ class Hangman
   end
 
   def check_guess(guess)
+    acceptable = ('a'..'z').to_a + ('0'..'9').to_a + ['-']
+
+    guess.size == 1 && acceptable.include?(guess)
+
     if guess.size > 1
       false
-    elsif !(/[[:graph:]]/.match(guess))
+    elsif !(/\A[[:alnum:]-]\z/.match(guess))
       false
     else
       true
@@ -75,12 +79,12 @@ class Hangman
 
   def start
     print_game_status
-    while (running?) do
+    while running? do
       guess = read_guess
       analyze_guess(guess)
       print_game_status
     end
-    return won?
+    won?
   end
 end
 
