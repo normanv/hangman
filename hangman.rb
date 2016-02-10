@@ -4,17 +4,24 @@ class Hangman
   #attr_reader :attribute_name
   NUMBER_OF_TRY = 6
   def initialize
-    @word = gets
-    @word = @word.strip
-    @guesses = Array.new(0)
-    @misses = Array.new(0)
+    @word = get_word
+    @guesses = []
+    @misses = []
   end
+
+  def get_word
+    @word = gets
+    @word = @word.strip.upcase
+  end
+
 
   def print_game_status
     print "Word :"
     @word.each_char do |c|
       if @guesses.include?(c)
         print c
+      elsif c == ' '
+        print ' '
       else
         print '_'
       end
@@ -24,7 +31,7 @@ class Hangman
   end
 
   def won?
-    @guesses.length == @word.chars.uniq.length
+    @guesses.length == @word.delete(' ').chars.uniq.length
   end
 
   def lost?
@@ -35,18 +42,42 @@ class Hangman
     !won? && !lost?
   end
 
-  def start
-    puts
-    while (running?) do
+  def check_guess(guess)
+    if guess.size > 1
+      false
+    elsif !(/[[:graph:]]/.match(guess))
+      false
+    else
+      true
+    end
+  end
+
+  def read_guess
+    print "Guess : "
+    guess = gets
+    guess = guess.strip.upcase
+    while !check_guess(guess)
+      puts "Sorry buddy but the guess can only be a letter or a number"
       print "Guess : "
       guess = gets
-      guess = guess.strip
-      #analyse the input to see if it s part of the word
-      if @word.count(guess) > 0
-        @guesses.push(guess)
-      else
-        @misses.push(guess)
-      end
+      guess = guess.strip.upcase
+    end
+    return guess
+  end
+
+  def analyze_guess(guess)
+    if @word.count(guess) > 0
+      @guesses.push(guess)
+    else
+      @misses.push(guess)
+    end
+  end
+
+  def start
+    print_game_status
+    while (running?) do
+      guess = read_guess
+      analyze_guess(guess)
       print_game_status
     end
     return won?
@@ -59,7 +90,7 @@ game = Hangman.new
 print "Thank you, now give the screen to the player =)"
 sleep 1
 system "clear"
-print "Welcome to the hangman game, you have to guess the word chosen by the master."
+puts "Welcome to the hangman game, you have to guess the word chosen by the master."
 result = game.start
-puts result ? "You win" : "You lose"
-result ? puts("You win") : puts("You lose")
+#this also work : puts result ? "You win" : "You lose"
+result ? puts("You win !") : puts("You lose !")
