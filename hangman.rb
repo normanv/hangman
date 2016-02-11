@@ -23,12 +23,8 @@ class Hangman
 
   public
 
-  def initialize_word(word_input)
-    if word_input && word_input != ""
-      @word = word_input
-    else
-      @word = gets
-    end
+  def read_word
+    @word = gets
     @word = @word.strip.upcase
 
     while !word_is_acceptable?(@word)

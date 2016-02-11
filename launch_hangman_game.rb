@@ -3,7 +3,7 @@ require './hangman'
 def prepare(game)
   puts "Hello game master !"
   print "Please give a word to guess for the player : "
-  game.initialize_word("")
+  game.read_word
   print "Thank you, now give the screen to the player =)"
   game
 end
