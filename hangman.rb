@@ -3,12 +3,12 @@ class Hangman
   #attr_reader/writer/accessor
   #attr_reader :attribute_name
 
-  NUMBER_OF_TRY = 6
-  def initialize
-    @word = ''''
+  def initialize(number_of_try = 6)
+    @word = ""
     @guesses = []
     @misses = []
     @acceptable = ('a'..'z').to_a + ('A'..'Z').to_a + ['-']
+    @number_of_try = number_of_try
   end
 
   def check_word?(word)
@@ -44,11 +44,11 @@ class Hangman
   end
 
   def won?
-    @guesses.length == @word.delete(' ').chars.uniq.length
+    @guesses.length == @word.chars.uniq.length
   end
 
   def lost?
-    @misses.length == NUMBER_OF_TRY
+    @misses.length == @number_of_try
   end
 
   def running?
@@ -73,7 +73,7 @@ class Hangman
   end
 
   def analyze_guess(guess)
-    if @word.count(guess) > 0
+    if @word.count(guess) > 0 && !@guesses.include?(guess)
       @guesses.push(guess)
     else
       @misses.push(guess)
