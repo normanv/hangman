@@ -4,16 +4,19 @@ class Hangman
   #attr_reader :attribute_name
   NUMBER_OF_TRY = 6
   def initialize
-    @word = get_word
+    @word = ''''
     @guesses = []
     @misses = []
   end
 
-  def get_word
-    @word = gets
+  def initialize_word(word_to_guess)
+    if word_to_guess && word_to_guess != ""
+      @word = word_to_guess
+    else
+      @word = gets
+    end
     @word = @word.strip.upcase
   end
-
 
   def print_game_status
     print "Word :"
@@ -44,16 +47,7 @@ class Hangman
 
   def check_guess(guess)
     acceptable = ('a'..'z').to_a + ('0'..'9').to_a + ['-']
-
-    guess.size == 1 && acceptable.include?(guess)
-
-    if guess.size > 1
-      false
-    elsif !(/\A[[:alnum:]-]\z/.match(guess))
-      false
-    else
-      true
-    end
+    acceptable.include?(guess)
   end
 
   def read_guess
@@ -87,14 +81,3 @@ class Hangman
     won?
   end
 end
-
-puts "Hello game master !"
-print "Please give a word to guess for the player : "
-game = Hangman.new
-print "Thank you, now give the screen to the player =)"
-sleep 1
-system "clear"
-puts "Welcome to the hangman game, you have to guess the word chosen by the master."
-result = game.start
-#this also work : puts result ? "You win" : "You lose"
-result ? puts("You win !") : puts("You lose !")
