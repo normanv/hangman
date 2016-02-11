@@ -47,6 +47,9 @@ class Hangman
     puts "Misses : " + @misses.join(',')
   end
 
+  def word
+    @word
+  end
 
   def read_guess
     print "Guess : "

@@ -25,4 +25,4 @@ game = Hangman.new
 prepare(game)
 system "clear"
 result = start(game)
-result ? puts("You win !") : puts("You lose !")
+result ? puts("You win !") : puts("You lose ! The word was " + game.word)
