@@ -2,20 +2,32 @@ class Hangman
   #private protected public ???
   #attr_reader/writer/accessor
   #attr_reader :attribute_name
+
   NUMBER_OF_TRY = 6
   def initialize
     @word = ''''
     @guesses = []
     @misses = []
+    @acceptable = ('a'..'z').to_a + ('A'..'Z').to_a + ['-']
   end
 
-  def initialize_word(word_to_guess)
-    if word_to_guess && word_to_guess != ""
-      @word = word_to_guess
+  def check_word?(word)
+    word.each_char.all?  {|c| @acceptable.include?(c)}
+  end
+
+  def initialize_word(word_input)
+    if word_input && word_input != ""
+      @word = word_input
     else
       @word = gets
     end
     @word = @word.strip.upcase
+
+    while !check_word?(@word)
+      print "The word does not respect the game rules, please write something else : "
+      @word = gets
+      @word = @word.strip.upcase
+    end
   end
 
   def print_game_status
@@ -23,8 +35,6 @@ class Hangman
     @word.each_char do |c|
       if @guesses.include?(c)
         print c
-      elsif c == ' '
-        print ' '
       else
         print '_'
       end
@@ -45,16 +55,15 @@ class Hangman
     !won? && !lost?
   end
 
-  def check_guess(guess)
-    acceptable = ('a'..'z').to_a + ('A'..'Z').to_a + ('0'..'9').to_a + ['-']
-    acceptable.include?(guess)
+  def check_guess?(guess)
+    @acceptable.include?(guess)
   end
 
   def read_guess
     print "Guess : "
     guess = gets
     guess = guess.strip.upcase
-    while !check_guess(guess)
+    while !check_guess?(guess)
       puts "Sorry buddy but the guess can only be a letter or a number"
       print "Guess : "
       guess = gets
