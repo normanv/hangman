@@ -4,68 +4,68 @@ require './hangman'
 RSpec.describe Hangman do
   let(:game) { Hangman.new }
 
-  describe "#check_guess" do
+  describe "#guess_is_acceptable" do
       before do
         game.initialize_word("hello")
       end
 
       it "return true for one letter" do
-        expect(game.check_guess?("a")).to eq(true)
+        expect(game.guess_is_acceptable?("a")).to eq(true)
       end
 
       it "return true for one capital letter" do
-        expect(game.check_guess?("A")).to eq(true)
+        expect(game.guess_is_acceptable?("A")).to eq(true)
       end
 
       it "return true for a dash" do
-        expect(game.check_guess?("-")).to eq(true)
+        expect(game.guess_is_acceptable?("-")).to eq(true)
       end
 
       it "return false for more than one character" do
-        expect(game.check_guess?("aa")).to eq(false)
+        expect(game.guess_is_acceptable?("aa")).to eq(false)
       end
 
       it "return false for more than one digit" do
-        expect(game.check_guess?("12")).to eq(false)
+        expect(game.guess_is_acceptable?("12")).to eq(false)
       end
 
       it "return false for no character" do
-        expect(game.check_guess?("")).to eq(false)
+        expect(game.guess_is_acceptable?("")).to eq(false)
       end
 
       it "return false for carriage return character" do
-        expect(game.check_guess?("\r")).to eq(false)
+        expect(game.guess_is_acceptable?("\r")).to eq(false)
       end
 
       it "return false for a line feed" do
-        expect(game.check_guess?("\n")).to eq(false)
+        expect(game.guess_is_acceptable?("\n")).to eq(false)
       end
 
       it "return false for a space" do
-        expect(game.check_guess?(" ")).to eq(false)
+        expect(game.guess_is_acceptable?(" ")).to eq(false)
       end
   end
 
-  describe "#check_word" do
+  describe "#word_is_acceptable" do
 
     it "return true for one word" do
-      expect(game.check_word?("hello")).to eq(true)
+      expect(game.word_is_acceptable?("hello")).to eq(true)
     end
 
     it "return true for compound word" do
-      expect(game.check_word?("geek-friendly")).to eq(true)
+      expect(game.word_is_acceptable?("geek-friendly")).to eq(true)
     end
 
     it "return false for two words" do
-      expect(game.check_word?("hello buddy")).to eq(false)
+      expect(game.word_is_acceptable?("hello buddy")).to eq(false)
     end
 
     it "return false for incorrect symbol in the word" do
-      expect(game.check_word?("hello?")).to eq(false)
+      expect(game.word_is_acceptable?("hello?")).to eq(false)
     end
 
     it "return false for number in the word" do
-      expect(game.check_word?("hello2")).to eq(false)
+      expect(game.word_is_acceptable?("hello2")).to eq(false)
     end
   end
 
