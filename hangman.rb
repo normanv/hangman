@@ -3,17 +3,25 @@ class Hangman
   #attr_reader/writer/accessor
   #attr_reader :attribute_name
 
-  def initialize(number_of_try = 6)
+  def initialize(number_of_tries = 6)
     @word = ""
     @guesses = []
     @misses = []
     @acceptable = ('a'..'z').to_a + ('A'..'Z').to_a + ['-']
-    @number_of_try = number_of_try
+    @number_of_tries = number_of_tries
   end
 
-  def check_word?(word)
-    word.each_char.all?  {|c| @acceptable.include?(c)}
+  private
+
+  def word_is_acceptable?(word)
+    word.each_char.all?  {|character| @acceptable.include?(character)}
   end
+
+  def guess_is_acceptable?(guess)
+    @acceptable.include?(guess)
+  end
+
+  public
 
   def initialize_word(word_input)
     if word_input && word_input != ""
@@ -23,7 +31,7 @@ class Hangman
     end
     @word = @word.strip.upcase
 
-    while !check_word?(@word)
+    while !word_is_acceptable?(@word)
       print "The word does not respect the game rules, please write something else : "
       @word = gets
       @word = @word.strip.upcase
@@ -43,28 +51,13 @@ class Hangman
     puts "Misses : " + @misses.join(',')
   end
 
-  def won?
-    @guesses.length == @word.chars.uniq.length
-  end
-
-  def lost?
-    @misses.length == @number_of_try
-  end
-
-  def running?
-    !won? && !lost?
-  end
-
-  def check_guess?(guess)
-    @acceptable.include?(guess)
-  end
 
   def read_guess
     print "Guess : "
     guess = gets
     guess = guess.strip.upcase
-    while !check_guess?(guess)
-      puts "Sorry buddy but the guess can only be a letter or a number"
+    while !guess_is_acceptable?(guess)
+      puts "Sorry buddy but the guess can only be a letter"
       print "Guess : "
       guess = gets
       guess = guess.strip.upcase
@@ -80,13 +73,16 @@ class Hangman
     end
   end
 
-  def start
-    print_game_status
-    while running? do
-      guess = read_guess
-      analyze_guess(guess)
-      print_game_status
-    end
-    won?
+  def running?
+    !won? && !lost?
   end
+
+  def won?
+    @guesses.length == @word.chars.uniq.length
+  end
+
+  def lost?
+    @misses.length == @number_of_tries
+  end
+
 end
