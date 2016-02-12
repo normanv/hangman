@@ -94,7 +94,6 @@ RSpec.describe Hangman do
   end
 
   context "all the letter in the word are guessed wit 0 mistakes" do
-    let(:game) { Hangman.new }
     before do
       allow(game).to receive(:gets).and_return('hello')
       game.read_word
@@ -109,7 +108,6 @@ RSpec.describe Hangman do
   end
 
   context "all the letter in the word are guessed with 0 mistakes" do
-    let(:game) { Hangman.new }
     before do
       allow(game).to receive(:gets).and_return('hello')
       game.read_word
@@ -123,68 +121,77 @@ RSpec.describe Hangman do
     it ("stop running") {expect(game.running?).to eq(false)}
   end
 
-  context "all the letter in the word are missed" do
+  context "when there are 3 tries" do
     let(:game) { Hangman.new(3) }
-    before do
-      allow(game).to receive(:gets).and_return('hello')
-      game.read_word
-      game.analyze_guess('A')
-      game.analyze_guess('B')
-      game.analyze_guess('C')
-    end
-    it ("not win") {expect(game.won?).to eq(false)}
-    it ("lose") {expect(game.lost?).to eq(true)}
-    it ("stop running") {expect(game.running?).to eq(false)}
-  end
 
-  context "all the letter in the word are guessed with less mistakes than max" do
-    let(:game) { Hangman.new(3) }
-    before do
-      allow(game).to receive(:gets).and_return('hello')
-      game.read_word
-      game.analyze_guess('A')
-      game.analyze_guess('H')
-      game.analyze_guess('B')
-      game.analyze_guess('E')
-      game.analyze_guess('L')
-      game.analyze_guess('O')
-    end
-    it ("win") {expect(game.won?).to eq(true)}
-    it ("not lose") {expect(game.lost?).to eq(false)}
-    it ("stop running") {expect(game.running?).to eq(false)}
-  end
+    context "all the letter in the word are missed" do
+      before do
+        allow(game).to receive(:gets).and_return('hello')
+        game.read_word
+        game.analyze_guess('A')
+        game.analyze_guess('B')
+        game.analyze_guess('C')
+      end
 
-  context "some letter in the word are guessed with mistakes exceding the limit" do
-    let(:game) { Hangman.new(3) }
-    before do
-      allow(game).to receive(:gets).and_return('hello')
-      game.read_word
-      game.analyze_guess('A')
-      game.analyze_guess('H')
-      game.analyze_guess('B')
-      game.analyze_guess('E')
-      game.analyze_guess('L')
-      game.analyze_guess('Z')
-    end
-    it ("not win") {expect(game.won?).to eq(false)}
-    it ("lose") {expect(game.lost?).to eq(true)}
-    it ("stop running") {expect(game.running?).to eq(false)}
-  end
+      it ("not win") {expect(game.won?).to eq(false)}
 
-  context "user write two times the same guess without guessing the whole word" do
-    let(:game) { Hangman.new(3) }
-    before do
-      allow(game).to receive(:gets).and_return('hello')
-      game.read_word
-      game.analyze_guess('H')
-      game.analyze_guess('E')
-      game.analyze_guess('L')
-      game.analyze_guess('L')
-    end
-    it ("not win") {expect(game.won?).to eq(false)}
-    it ("not lose") {expect(game.lost?).to eq(false)}
-    it ("running") {expect(game.running?).to eq(true)}
-  end
-  context
+      it ("lose") {expect(game.lost?).to eq(true)}
 
+      it ("stop running") {expect(game.running?).to eq(false)}
+    end
+
+    context "all the letter in the word are guessed with less mistakes than max" do
+      before do
+        allow(game).to receive(:gets).and_return('hello')
+        game.read_word
+        game.analyze_guess('A')
+        game.analyze_guess('H')
+        game.analyze_guess('B')
+        game.analyze_guess('E')
+        game.analyze_guess('L')
+        game.analyze_guess('O')
+      end
+
+      it ("win") {expect(game.won?).to eq(true)}
+
+      it ("not lose") {expect(game.lost?).to eq(false)}
+
+      it ("stop running") {expect(game.running?).to eq(false)}
+    end
+
+    context "some letter in the word are guessed with mistakes exceding the limit" do
+      before do
+        allow(game).to receive(:gets).and_return('hello')
+        game.read_word
+        game.analyze_guess('A')
+        game.analyze_guess('H')
+        game.analyze_guess('B')
+        game.analyze_guess('E')
+        game.analyze_guess('L')
+        game.analyze_guess('Z')
+      end
+
+      it ("not win") {expect(game.won?).to eq(false)}
+
+      it ("lose") {expect(game.lost?).to eq(true)}
+
+      it ("stop running") {expect(game.running?).to eq(false)}
+    end
+
+    context "user write two times the same guess without guessing the whole word" do
+      before do
+        allow(game).to receive(:gets).and_return('hello')
+        game.read_word
+        game.analyze_guess('H')
+        game.analyze_guess('E')
+        game.analyze_guess('L')
+        game.analyze_guess('L')
+      end
+      it ("not win") {expect(game.won?).to eq(false)}
+
+      it ("not lose") {expect(game.lost?).to eq(false)}
+
+      it ("running") {expect(game.running?).to eq(true)}
+    end
+  end
 end
