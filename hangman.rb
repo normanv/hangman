@@ -26,12 +26,12 @@ class Hangman
   def read_word
     @word = gets
     @word = @word.strip.upcase
-
     while !word_is_acceptable?(@word)
       print "The word does not respect the game rules, please write something else : "
       @word = gets
       @word = @word.strip.upcase
     end
+    @word
   end
 
   def print_game_status
@@ -61,7 +61,7 @@ class Hangman
       guess = gets
       guess = guess.strip.upcase
     end
-    return guess
+    guess
   end
 
   def analyze_guess(guess)
