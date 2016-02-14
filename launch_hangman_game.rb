@@ -23,6 +23,6 @@ end
 game = Hangman.new
 
 prepare(game)
-system "clear"
+system "reset"
 result = start(game)
 result ? puts("You win !") : puts("You lose ! The word was " + game.word)
