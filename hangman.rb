@@ -1,5 +1,4 @@
 class Hangman
-  #private protected public ???
   #attr_reader/writer/accessor
   #attr_reader :attribute_name
 
