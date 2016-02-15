@@ -21,7 +21,7 @@ class Hangman_view
   end
 
   def game_end
-    @model.won? ? puts("You win !") : puts("You lose ! The word was " + game.word)
+    @model.won? ? puts("You win !") : puts("You lose ! The word was " + @model.word)
   end
 
   private
