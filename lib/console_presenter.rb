@@ -60,7 +60,7 @@ class Console_presenter
 
   def get_input(header)
     print header
-    input = gets.strip.upcase
+    input = STDIN.gets.strip.upcase
     input
   end
 end
