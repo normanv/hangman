@@ -4,65 +4,64 @@ require './hangman'
 RSpec.describe Hangman do
   let(:game) { Hangman.new }
 
-  describe "#guess_is_acceptable" do
-      before do
-        allow(game).to receive(:gets).and_return('hello')
-        game.read_word
-      end
+  describe "#read_guess" do
+    let(:read_failure_message) { "Guess : Sorry buddy but the"\
+    " guess can only be a letter\nGuess : " }
 
-      it "returns the capitalize letter when user write a single letter" do
-        allow(game).to receive(:gets).and_return('a')
-        expect(game.read_guess).to eq('A')
-      end
+    before do
+      allow(game).to receive(:gets).and_return('hello')
+      game.read_word
+    end
 
-      it "returns the letter when user write a capital letter" do
-        allow(game).to receive(:gets).and_return('A')
-        expect(game.read_guess).to eq('A')
-      end
+    it "returns the capitalize letter when user write a single letter" do
+      allow(game).to receive(:gets).and_return('a')
+      expect(game.read_guess).to eq('A')
+    end
 
-      it "returns a dash when user write for a dash" do
-        allow(game).to receive(:gets).and_return('-')
-        expect(game.read_guess).to eq('-')
-      end
+    it "returns the letter when user write a capital letter" do
+      allow(game).to receive(:gets).and_return('A')
+      expect(game.read_guess).to eq('A')
+    end
 
-      it "asks to write again when user write for more than one character" do
-        allow(game).to receive(:gets).and_return('aa', 'a')
-        expect { game.read_guess }.to output("Guess : Sorry buddy but the"\
-        " guess can only be a letter\nGuess : ").to_stdout
-      end
+    it "returns a dash when user write for a dash" do
+      allow(game).to receive(:gets).and_return('-')
+      expect(game.read_guess).to eq('-')
+    end
 
-      it "asks to write again when user write a digit" do
-        allow(game).to receive(:gets).and_return('1', 'a')
-        expect { game.read_guess }.to output("Guess : Sorry buddy but the"\
-        " guess can only be a letter\nGuess : ").to_stdout
-      end
+    it "asks to write again when user write for more than one character" do
+      allow(game).to receive(:gets).and_return('aa', 'a')
+      expect { game.read_guess }.to output(read_failure_message).to_stdout
+    end
 
-      it "asks to write again when user write nothing" do
-        allow(game).to receive(:gets).and_return('', 'a')
-        expect { game.read_guess }.to output("Guess : Sorry buddy but the"\
-        " guess can only be a letter\nGuess : ").to_stdout
-      end
+    it "asks to write again when user write a digit" do
+      allow(game).to receive(:gets).and_return('1', 'a')
+      expect { game.read_guess }.to output(read_failure_message).to_stdout
+    end
 
-      it "asks to write again when user write carriage return character" do
-        allow(game).to receive(:gets).and_return('\r', 'a')
-        expect { game.read_guess }.to output("Guess : Sorry buddy but the"\
-        " guess can only be a letter\nGuess : ").to_stdout
-      end
+    it "asks to write again when user write nothing" do
+      allow(game).to receive(:gets).and_return('', 'a')
+      expect { game.read_guess }.to output(read_failure_message).to_stdout
+    end
 
-      it "asks to write again when user write a line feed" do
-        allow(game).to receive(:gets).and_return('\n', 'a')
-        expect { game.read_guess }.to output("Guess : Sorry buddy but the"\
-        " guess can only be a letter\nGuess : ").to_stdout
-      end
+    it "asks to write again when user write carriage return character" do
+      allow(game).to receive(:gets).and_return('\r', 'a')
+      expect { game.read_guess }.to output(read_failure_message).to_stdout
+    end
 
-      it "asks to write again when user write a space" do
-        allow(game).to receive(:gets).and_return(' ', 'a')
-        expect { game.read_guess }.to output("Guess : Sorry buddy but the"\
-        " guess can only be a letter\nGuess : ").to_stdout
-      end
+    it "asks to write again when user write a line feed" do
+      allow(game).to receive(:gets).and_return('\n', 'a')
+      expect { game.read_guess }.to output(read_failure_message).to_stdout
+    end
+
+    it "asks to write again when user write a space" do
+      allow(game).to receive(:gets).and_return(' ', 'a')
+      expect { game.read_guess }.to output(read_failure_message).to_stdout
+    end
   end
 
   describe "#word_is_acceptable" do
+    let(:read_failure_message) { 'The word does not respect the game '\
+    'rules, please write something else : ' }
 
     it "returns a correct word with capital letters" do
       allow(game).to receive(:gets).and_return('hello')
@@ -76,20 +75,17 @@ RSpec.describe Hangman do
 
     it "asks for a new word when sending two words" do
       allow(game).to receive(:gets).and_return('hello buddy', 'hello')
-      expect { game.read_word }.to output('The word does not respect the game '\
-      'rules, please write something else : ').to_stdout
+      expect { game.read_word }.to output(read_failure_message).to_stdout
     end
 
     it "asks for a new word when sending special symbol in the word" do
-      allow_any_instance_of(Kernel).to receive(:gets).and_return('hello?', 'hello')
-      expect { game.read_word }.to output('The word does not respect the game '\
-      'rules, please write something else : ').to_stdout
+      allow(game).to receive(:gets).and_return('hello?', 'hello')
+      expect { game.read_word }.to output(read_failure_message).to_stdout
     end
 
     it "asks for a new word when sending a word that contains a digit" do
-      allow_any_instance_of(Kernel).to receive(:gets).and_return('hello2', 'hello')
-      expect { game.read_word }.to output('The word does not respect the game '\
-      'rules, please write something else : ').to_stdout
+      allow(game).to receive(:gets).and_return('hello2', 'hello')
+      expect { game.read_word }.to output(read_failure_message).to_stdout
     end
   end
 
@@ -102,23 +98,19 @@ RSpec.describe Hangman do
       game.analyze_guess('L')
       game.analyze_guess('O')
     end
-    it ("wins") {expect(game.won?).to eq(true)}
-    it ("not loses") {expect(game.lost?).to eq(false)}
-    it ("stop running") {expect(game.running?).to eq(false)}
-  end
 
-  context "all the letter in the word are guessed with 0 mistakes" do
-    before do
-      allow(game).to receive(:gets).and_return('hello')
-      game.read_word
-      game.analyze_guess('H')
-      game.analyze_guess('E')
-      game.analyze_guess('L')
-      game.analyze_guess('O')
+    it "is won" do
+      expect(game).to be_won
     end
-    it ("wins") {expect(game.won?).to eq(true)}
-    it ("not loses") {expect(game.lost?).to eq(false)}
-    it ("stops running") {expect(game.running?).to eq(false)}
+
+    it "is not lost" do
+      expect(game).not_to be_lost
+    end
+
+    it "is not running" do
+      expect(game).not_to be_running
+    end
+
   end
 
   context "when there are 3 tries" do
@@ -133,11 +125,17 @@ RSpec.describe Hangman do
         game.analyze_guess('C')
       end
 
-      it ("not wins") {expect(game.won?).to eq(false)}
+      it "is not won" do
+        expect(game).not_to be_won
+      end
 
-      it ("loses") {expect(game.lost?).to eq(true)}
+      it "is lost" do
+        expect(game).to be_lost
+      end
 
-      it ("stops running") {expect(game.running?).to eq(false)}
+      it "is not running" do
+        expect(game).not_to be_running
+      end
     end
 
     context "all the letter in the word are guessed with less mistakes than max" do
@@ -152,11 +150,17 @@ RSpec.describe Hangman do
         game.analyze_guess('O')
       end
 
-      it ("wins") {expect(game.won?).to eq(true)}
+      it "is won" do
+        expect(game).to be_won
+      end
 
-      it ("not loses") {expect(game.lost?).to eq(false)}
+      it "is not lost" do
+        expect(game).not_to be_lost
+      end
 
-      it ("stops running") {expect(game.running?).to eq(false)}
+      it "is not running" do
+        expect(game).not_to be_running
+      end
     end
 
     context "some letter in the word are guessed with mistakes exceding the limit" do
@@ -171,11 +175,18 @@ RSpec.describe Hangman do
         game.analyze_guess('Z')
       end
 
-      it ("not wins") {expect(game.won?).to eq(false)}
+      it "is not won" do
+        expect(game).not_to be_won
+      end
 
-      it ("loses") {expect(game.lost?).to eq(true)}
+      it "is lost" do
+        expect(game).to be_lost
+      end
 
-      it ("stops running") {expect(game.running?).to eq(false)}
+      it "is not running" do
+        expect(game).not_to be_running
+      end
+
     end
 
     context "user write two times the same guess without guessing the whole word" do
@@ -187,11 +198,19 @@ RSpec.describe Hangman do
         game.analyze_guess('L')
         game.analyze_guess('L')
       end
-      it ("not wins") {expect(game.won?).to eq(false)}
 
-      it ("not loses") {expect(game.lost?).to eq(false)}
+      it "is not won" do
+        expect(game).not_to be_won
+      end
 
-      it ("is running") {expect(game.running?).to eq(true)}
+      it "is not lost" do
+        expect(game).not_to be_lost
+      end
+
+      it "is running" do
+        expect(game).to be_running
+      end
+
     end
   end
 end
