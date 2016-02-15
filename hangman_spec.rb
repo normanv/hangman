@@ -212,5 +212,58 @@ RSpec.describe Hangman do
       end
 
     end
+
+    context "user write many times the same guess and lost" do
+      before do
+        allow(game).to receive(:gets).and_return('hello')
+        game.read_word
+        game.analyze_guess('H')
+        game.analyze_guess('E')
+        game.analyze_guess('L')
+        game.analyze_guess('L')
+        game.analyze_guess('L')
+        game.analyze_guess('L')
+      end
+
+      it "is not won" do
+        expect(game).not_to be_won
+      end
+
+      it "is lost" do
+        expect(game).to be_lost
+      end
+
+      it "is not running" do
+        expect(game).not_to be_running
+      end
+
+    end
+
+    context "user write a mix of already guessed and missed character" do
+      before do
+        allow(game).to receive(:gets).and_return('hello')
+        game.read_word
+        game.analyze_guess('H')
+        game.analyze_guess('E')
+        game.analyze_guess('L')
+        game.analyze_guess('L')
+        game.analyze_guess('A')
+        game.analyze_guess('B')
+      end
+
+      it "is not won" do
+        expect(game).not_to be_won
+      end
+
+      it "is lost" do
+        expect(game).to be_lost
+      end
+
+      it "is not running" do
+        expect(game).not_to be_running
+      end
+
+    end
+
   end
 end
