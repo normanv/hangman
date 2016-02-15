@@ -1,5 +1,5 @@
-require '../lib/hangman_model'
-require '../lib/console_presenter'
+require_relative '../lib/hangman_model'
+require_relative '../lib/console_presenter'
 
 DICTIONNARY_PATH = '/usr/share/dict/words'
 v1 = ARGV[0]
@@ -16,7 +16,7 @@ end
 if v1 == "--random"
   game = Hangman_model.new(Console_presenter.new, get_random_word.strip.upcase)
 else
-  game = Hangman_model.new(Console_presenter.new, "")
+  game = Hangman_model.new(Console_presenter.new)
 end
 
 game.start
