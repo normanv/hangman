@@ -1,17 +1,12 @@
 # game_spec.rb
-require './hangman'
+require './Hangman_controller'
 
-RSpec.describe Hangman do
-  let(:game) { Hangman.new }
+RSpec.describe Hangman_controller do
+  let(:game) { Hangman_controller.new("HELLO") }
 
   describe "#read_guess" do
     let(:read_failure_message) { "Guess : Sorry buddy but the"\
     " guess can only be a letter\nGuess : " }
-
-    before do
-      allow(game).to receive(:gets).and_return('hello')
-      game.read_word
-    end
 
     it "returns the capitalize letter when user write a single letter" do
       allow(game).to receive(:gets).and_return('a')
@@ -59,9 +54,10 @@ RSpec.describe Hangman do
     end
   end
 
-  describe "#word_is_acceptable" do
+  describe "#read_word" do
+    let(:game) { Hangman_controller.new("HELLO")}
     let(:read_failure_message) { 'The word does not respect the game '\
-    'rules, please write something else : ' }
+        'rules, please write something else : ' }
 
     it "returns a correct word with capital letters" do
       allow(game).to receive(:gets).and_return('hello')
@@ -90,9 +86,8 @@ RSpec.describe Hangman do
   end
 
   context "all the letter in the word are guessed wit 0 mistakes" do
+    let(:game) { Hangman_controller.new("HELLO",3).model }
     before do
-      allow(game).to receive(:gets).and_return('hello')
-      game.read_word
       game.analyze_guess('H')
       game.analyze_guess('E')
       game.analyze_guess('L')
@@ -114,12 +109,10 @@ RSpec.describe Hangman do
   end
 
   context "when there are 3 tries" do
-    let(:game) { Hangman.new(3) }
+    let(:game) { Hangman_controller.new("HELLO",3).model }
 
     context "all the letter in the word are missed" do
       before do
-        allow(game).to receive(:gets).and_return('hello')
-        game.read_word
         game.analyze_guess('A')
         game.analyze_guess('B')
         game.analyze_guess('C')
@@ -140,8 +133,6 @@ RSpec.describe Hangman do
 
     context "all the letter in the word are guessed with less mistakes than max" do
       before do
-        allow(game).to receive(:gets).and_return('hello')
-        game.read_word
         game.analyze_guess('A')
         game.analyze_guess('H')
         game.analyze_guess('B')
@@ -165,8 +156,6 @@ RSpec.describe Hangman do
 
     context "some letter in the word are guessed with mistakes exceding the limit" do
       before do
-        allow(game).to receive(:gets).and_return('hello')
-        game.read_word
         game.analyze_guess('A')
         game.analyze_guess('H')
         game.analyze_guess('B')
@@ -191,8 +180,6 @@ RSpec.describe Hangman do
 
     context "user write two times the same guess without guessing the whole word" do
       before do
-        allow(game).to receive(:gets).and_return('hello')
-        game.read_word
         game.analyze_guess('H')
         game.analyze_guess('E')
         game.analyze_guess('L')
@@ -215,8 +202,6 @@ RSpec.describe Hangman do
 
     context "user write many times the same guess and lost" do
       before do
-        allow(game).to receive(:gets).and_return('hello')
-        game.read_word
         game.analyze_guess('H')
         game.analyze_guess('E')
         game.analyze_guess('L')
@@ -241,8 +226,6 @@ RSpec.describe Hangman do
 
     context "user write a mix of already guessed and missed character" do
       before do
-        allow(game).to receive(:gets).and_return('hello')
-        game.read_word
         game.analyze_guess('H')
         game.analyze_guess('E')
         game.analyze_guess('L')
@@ -264,6 +247,5 @@ RSpec.describe Hangman do
       end
 
     end
-
   end
 end
