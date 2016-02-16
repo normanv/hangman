@@ -6,7 +6,7 @@ class AcceptableWord
     if !word
       @value = read_word_from_user
     else
-      @value = get_word_from_constructor(word)
+      @value = get_word_from_constructor(word.strip.upcase)
     end
   end
 
@@ -30,7 +30,7 @@ class AcceptableWord
 
   def word_is_acceptable?(word)
     !word.empty? &&
-    word.each_char.all?  {|character| ACCEPTABLE.include?(character)} 
+    word.each_char.all?  {|character| ACCEPTABLE.include?(character)}
   end
 
 end

@@ -2,8 +2,8 @@
 require_relative '../lib/hangman_model'
 require_relative '../lib/console_presenter'
 
-RSpec.describe Hangman_model do
-  let(:guess) { AcceptableGuess.new(Console_presenter.new)}
+RSpec.describe HangmanModel do
+  let(:guess) { AcceptableGuess.new(ConsolePresenter.new)}
 
   describe "#acceptable_guess" do
     let(:read_failure_message) { "Guess : Sorry buddy but the"\
@@ -56,7 +56,7 @@ RSpec.describe Hangman_model do
   end
 
   describe "#read_word" do
-    let(:word) { AcceptableWord.new(Console_presenter.new)}
+    let(:word) { AcceptableWord.new(ConsolePresenter.new)}
     let(:read_failure_message) { 'Please give a word to guess for the player :'\
     ' The word does not respect the game rules, please write something else : ' }
 
@@ -93,7 +93,7 @@ RSpec.describe Hangman_model do
   end
 
   context "all the letter in the word are guessed wit 0 mistakes" do
-    let(:game) { Hangman_model.new(Console_presenter.new,"HELLO",3) }
+    let(:game) { HangmanModel.new(ConsolePresenter.new,"HELLO",3) }
     before do
       game.guess('H')
       game.guess('E')
@@ -116,7 +116,7 @@ RSpec.describe Hangman_model do
   end
 
   context "when there are 3 tries" do
-    let(:game) { Hangman_model.new(Console_presenter.new,"HELLO",3) }
+    let(:game) { HangmanModel.new(ConsolePresenter.new,"HELLO",3) }
 
     context "all the letter in the word are missed" do
       before do

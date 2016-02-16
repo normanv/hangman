@@ -14,9 +14,9 @@ def get_random_word
 end
 
 if v1 == "--random"
-  game = Hangman_model.new(Console_presenter.new, get_random_word.strip.upcase)
+  game = HangmanModel.new(ConsolePresenter.new, get_random_word)
 else
-  game = Hangman_model.new(Console_presenter.new)
+  game = HangmanModel.new(ConsolePresenter.new)
 end
 
 game.start

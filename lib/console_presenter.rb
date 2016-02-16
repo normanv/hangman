@@ -1,5 +1,4 @@
-
-class Console_presenter
+class ConsolePresenter
   def initialize
   end
 

@@ -1,8 +1,7 @@
-#require 'console_presenter'
 require_relative 'acceptable_word'
 require_relative 'acceptable_guess'
 
-class Hangman_model
+class HangmanModel
   #attr_reader/writer/accessor
   attr_reader :word, :guesses, :misses, :view
   ACCEPTABLE = ('a'..'z').to_a + ('A'..'Z').to_a + ['-']
