@@ -1,28 +1,28 @@
 require_relative 'acceptable_word'
-require_relative 'acceptable_guess'
+require_relative 'ask_user_for_guess'
 
-class HangmanModel
-  #attr_reader/writer/accessor
+class Hangman
   attr_reader :word, :guesses, :misses, :view
-  ACCEPTABLE = ('a'..'z').to_a + ('A'..'Z').to_a + ['-']
 
   def initialize(view, word = nil, number_of_tries = 6)
     @view = view
-    @word = AcceptableWord.new(word, @view).value
+    @word = AcceptableWord.new(@view).call(word)
     @guesses = []
     @misses = []
     @max_tries = number_of_tries
   end
 
   def guess(guess)
+    if !running?
+      puts "the game is finish you can not make guess"
+      return
+    end
     if @word.include?(guess) && !@guesses.include?(guess)
       @guesses << guess
     else
       @misses << guess
     end
   end
-  # correct_guesses = @quesses.select { |g| @word.include?(g) }
-  # incorrect_guesses = @guesses.reject { |g| @word.include?(g) }
 
   def running?
     !won? && !lost?
@@ -37,14 +37,14 @@ class HangmanModel
   end
 
   def start
-    @view.game_start
-    @view.game_status(self)
+    @view.print_welcome
+    @view.print_game_status(self)
     while running? do
-      guess = AcceptableGuess.new(@view).value
+      guess = AskUserForGuess.new(@view).call
       guess(guess)
-      @view.game_status(self)
+      @view.print_game_status(self)
     end
-    @view.game_end(self)
+    @view.print_game_end(self)
   end
 
 end

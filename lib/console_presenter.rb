@@ -2,22 +2,22 @@ class ConsolePresenter
   def initialize
   end
 
-  def game_start
+  def print_welcome
     system "reset"
     puts "Welcome to the hangman game, you have to guess the word chosen by the master."
   end
 
-  def game_status(model)
+  def print_game_status(model)
     puts "Word :" + current_word_status(model)
     puts "Misses : " + model.misses.join(',')
   end
 
-  def game_end(model)
+  def print_game_end(model)
     model.won? ? puts("You win !") : puts("You lose ! The word was " + model.word)
   end
 
-  def read_word(again)
-    if !again
+  def read_word(first_call: true)
+    if first_call
       word = get_input("Please give a word to guess for the player : ")
     else
       word = get_input("The word does not respect the game rules, please write something else : ")
@@ -25,13 +25,13 @@ class ConsolePresenter
     word
   end
 
-  def read_guess(again)
-    if !again
+  def read_guess(first_call: true)
+    if first_call
       guess = get_input("Guess : ")
     else
       guess = get_input("Sorry buddy but the guess can only be a letter\nGuess : ")
     end
-    guess
+    guess.strip.upcase
   end
 
   private

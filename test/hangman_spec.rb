@@ -2,8 +2,8 @@
 require_relative '../lib/hangman_model'
 require_relative '../lib/console_presenter'
 
-RSpec.describe HangmanModel do
-  let(:guess) { AcceptableGuess.new(ConsolePresenter.new)}
+RSpec.describe Hangman do
+  let(:guess) { AskUserForGuess.new(ConsolePresenter.new)}
 
   describe "#acceptable_guess" do
     let(:read_failure_message) { "Guess : Sorry buddy but the"\
@@ -11,47 +11,47 @@ RSpec.describe HangmanModel do
 
     it "returns the capitalize letter when user write a single letter" do
       allow(STDIN).to receive(:gets).and_return('a')
-      expect(guess.value).to eq('A')
+      expect(guess.call).to eq('A')
     end
 
     it "returns the letter when user write a capital letter" do
       allow(STDIN).to receive(:gets).and_return('A')
-      expect(guess.value).to eq('A')
+      expect(guess.call).to eq('A')
     end
 
     it "returns a dash when user write for a dash" do
       allow(STDIN).to receive(:gets).and_return('-')
-      expect(guess.value).to eq('-')
+      expect(guess.call).to eq('-')
     end
 
     it "asks to write again when user write for more than one character" do
       allow(STDIN).to receive(:gets).and_return('aa', 'a')
-      expect { guess.value }.to output(read_failure_message).to_stdout
+      expect { guess.call }.to output(read_failure_message).to_stdout
     end
 
     it "asks to write again when user write a digit" do
       allow(STDIN).to receive(:gets).and_return('1', 'a')
-      expect { guess.value }.to output(read_failure_message).to_stdout
+      expect { guess.call }.to output(read_failure_message).to_stdout
     end
 
     it "asks to write again when user write nothing" do
       allow(STDIN).to receive(:gets).and_return('', 'a')
-      expect { guess.value }.to output(read_failure_message).to_stdout
+      expect { guess.call }.to output(read_failure_message).to_stdout
     end
 
     it "asks to write again when user write carriage return character" do
       allow(STDIN).to receive(:gets).and_return('\r', 'a')
-      expect { guess.value }.to output(read_failure_message).to_stdout
+      expect { guess.call }.to output(read_failure_message).to_stdout
     end
 
     it "asks to write again when user write a line feed" do
       allow(STDIN).to receive(:gets).and_return('\n', 'a')
-      expect { guess.value }.to output(read_failure_message).to_stdout
+      expect { guess.call }.to output(read_failure_message).to_stdout
     end
 
     it "asks to write again when user write a space" do
       allow(STDIN).to receive(:gets).and_return(' ', 'a')
-      expect { guess.value }.to output(read_failure_message).to_stdout
+      expect { guess.call }.to output(read_failure_message).to_stdout
     end
   end
 
@@ -62,38 +62,38 @@ RSpec.describe HangmanModel do
 
     it "returns a correct word with capital letters" do
       allow(STDIN).to receive(:gets).and_return('hello')
-      expect(word.value).to eq("HELLO")
+      expect(word.call).to eq("HELLO")
     end
 
     it "returns a correct compound word with capital letters" do
       allow(STDIN).to receive(:gets).and_return('geek-friendly')
-      expect(word.value).to eq("GEEK-FRIENDLY")
+      expect(word.call).to eq("GEEK-FRIENDLY")
     end
 
     it "asks for a new word when sending two words" do
       allow(STDIN).to receive(:gets).and_return('hello buddy', 'hello')
-      expect { word.value }.to output(read_failure_message).to_stdout
+      expect { word.call }.to output(read_failure_message).to_stdout
     end
 
     it "asks for a new word when sending special symbol in the word" do
       allow(STDIN).to receive(:gets).and_return('hello?', 'hello')
-      expect { word.value }.to output(read_failure_message).to_stdout
+      expect { word.call }.to output(read_failure_message).to_stdout
     end
 
     it "asks for a new word when sending a word that contains a digit" do
       allow(STDIN).to receive(:gets).and_return('hello2', 'hello')
-      expect { word.value }.to output(read_failure_message).to_stdout
+      expect { word.call }.to output(read_failure_message).to_stdout
     end
 
     it "asks for a new word when sending an empty string" do
       allow(STDIN).to receive(:gets).and_return('', 'hello')
-      expect { word.value }.to output(read_failure_message).to_stdout
+      expect { word.call }.to output(read_failure_message).to_stdout
     end
 
   end
 
   context "all the letter in the word are guessed wit 0 mistakes" do
-    let(:game) { HangmanModel.new(ConsolePresenter.new,"HELLO",3) }
+    let(:game) { Hangman.new(ConsolePresenter.new,"HELLO",3) }
     before do
       game.guess('H')
       game.guess('E')
@@ -116,7 +116,7 @@ RSpec.describe HangmanModel do
   end
 
   context "when there are 3 tries" do
-    let(:game) { HangmanModel.new(ConsolePresenter.new,"HELLO",3) }
+    let(:game) { Hangman.new(ConsolePresenter.new,"HELLO",3) }
 
     context "all the letter in the word are missed" do
       before do
